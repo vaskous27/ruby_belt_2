@@ -1,0 +1,65 @@
+<h1>Hi <%= @user.name %> </h1>
+
+<form action="/posts" method="post">
+	<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+	<input type="hidden" name="post[user_id]" value="<%= @user.id %>">
+	<p>
+		<textarea name="post[content]">Post something witty here...</textarea>	
+	</p>
+	<input type="submit" value="Idea!">
+</form>
+
+<div class="box">
+
+<% @post.each do |p| %>
+
+<p><a href="/users/<%= p.user_id %>"> <%= p.user.alias %></a> says: <%= p.content %></p>
+<p> <form action="/likes" method="post">
+	        <input type="hidden" name="like[user_id]" value="<%= @user.id %>">
+			<input type="hidden" name="like[post_id]" value="<%= p.id %>">
+			<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+			<input type="submit" value="Like">
+	</form>
+
+	<a href='/posts/<%= p.id %>'><%= p.likes.count %> people like this </a>
+
+	<% if @user.id == p.user.id %>
+<p><form action='/posts/<%= p.id %>' method='post'>
+	 <input type='hidden' name="authenticity_token" value="<%= form_authenticity_token %>">
+	  <input type='hidden' name="_method" value="delete">
+	 <button type="submit" name="Delete">Delete</button>
+</form></p>
+<% end %>
+<% end %>
+</p>
+
+<% @zero_post.each do |z| %>
+<% if z.likes.count == 0 %>
+
+<p><a href="/users/<%= z.user_id %>"> <%= z.user.alias %></a> says: <%= z.content %></p>
+<p> <form action="/likes" method="post">
+	        <input type="hidden" name="like[user_id]" value="<%= @user.id %>">
+			<input type="hidden" name="like[post_id]" value="<%= z.id %>">
+			<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+			<input type="submit" value="Like">
+	</form>
+
+	<a href='/posts/<%= z.id %>'><%= z.likes.count %> people like this </a>
+
+	<% if @user.id == z.user.id %>
+<p><form action='/posts/<%= z.id %>' method='post'>
+	 <input type='hidden' name="authenticity_token" value="<%= form_authenticity_token %>">
+	  <input type='hidden' name="_method" value="delete">
+	 <button type="submit" name="Delete">Delete</button>
+</form></p>
+<% end %>
+<% end %>
+<% end %>
+</p>
+
+
+
+
+
+
+
